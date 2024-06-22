@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const appConfiguration = require('./src/config/config')
+const fileupload = require("express-fileupload");
+
 
 // Initialize Express app
 const app = express();
@@ -16,6 +18,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "50000mb", extended: true, parameterLimit: 5002633 }));
 app.use(bodyParser.urlencoded({ limit: "50000mb", extended: true, parameterLimit: 5002633 }));
+app.use(fileupload());
 
 // Set up routes
 app.use('/v1', indexRouter);

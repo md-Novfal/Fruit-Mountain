@@ -2,6 +2,7 @@ const importedModal = require('./Modelimporter');
 var log = require('../staticService/logger').LOG;
 const responseStructure = require('../staticService/responseResponse');
 const { isEmpty } = require('lodash');
+let errorInitiateToken;
 
 const createRequests = async (req) => {
     try {
@@ -20,22 +21,25 @@ const createRequests = async (req) => {
                     return { status: 200, value: result };
                 }
             });
+            return create;
         } else if (createData.length == undefined) {
             const create = await createReqApi.save().then((result, error) => {
                 if (error) {
                     return (errorInitiateToken = {
-                        status: 401,
+                        status: 400,
                         value: `PF::Error while creating data`,
                     });
                 } else {
                     return { status: 200, value: result };
                 }
             });
+            return create;
+
         }
     } catch (error) {
         errorInitiateToken = {
-            status: 401,
-            value: `PF::unable to process the request`,
+            status: 400,
+            value: `${error.errorResponse.message}`,
         };
         log.error(errorInitiateToken);
         return errorInitiateToken;
@@ -81,6 +85,7 @@ const updateRequests = async (req, res) => {
                 return { status: 200, value: result };
             }
         });
+        return updateById;
     } catch (error) {
         return (errorInitiateToken = {
             status: 401,
@@ -181,7 +186,7 @@ const readWithConstraint = async (req, res) => {
     }
 };
 
-const readWithSearch = async (req, res) => {
+const readWithSearch = async (req) => {
     let responseMessage;
     try {
         const collection_name = await importedModal(req.dbName);
@@ -209,30 +214,31 @@ const readWithSearch = async (req, res) => {
     }
 };
 
-const readWithPagination = async (req, res) => {
+const readWithPagination = async (req) => {
     let responseMessage;
     try {
         const collection_name = await importedModal(req.dbName);
         const options = req.requestQuery;
         const sortQuery = req.sortQuery;
         const query = req.searchData;
-        options.select = ['mobileNumber', 'email', 'fname', 'lname', 'isAdmin', 'isActive'];
+        options.select = ['mobileNumber', 'email', 'name', 'isAdmin', 'isActive'];
         options.sort = sortQuery;
         if (query) {
             query.mobileNumber = { $regex: new RegExp(query.mobileNumber), $options: 'i' };
         }
-        collection_name.paginate(query, options, function (err, data) {
-            if (err) {
-                responseMessage = responseStructure.errorResponse('Error in read with Pagination');
+        const getPaginate = collection_name.paginate(query, options).then((result, error) => {
+            if (error) {
+                responseMessage = responseStructure.errorResponse('Error in read with pagination');
                 return errorInitiateToken = {
                     status: 401,
-                    value: `PF::Error in read with Pagination`
+                    value: `PF::Error in read with pagination`
                 };
             } else {
                 return { status: 200, value: result };
 
             }
         });
+        return getPaginate;
     } catch (error) {
         responseMessage = responseStructure.errorResponse('Error in read with Pagination');
         return errorInitiateToken = {
@@ -243,7 +249,7 @@ const readWithPagination = async (req, res) => {
 };
 
 
-const staticArrayPush = async (req, res) => {
+const staticArrayPush = async (req) => {
     let responseMessage;
     try {
         const collection_name = await importedModal(req.dbName);
@@ -271,7 +277,7 @@ const staticArrayPush = async (req, res) => {
 };
 
 
-const getSingleField = async (req, res) => {
+const getSingleField = async (req) => {
     let responseMessage;
     try {
         const collection_name = await importedModal(req.dbName);
@@ -295,6 +301,19 @@ const getSingleField = async (req, res) => {
     }
 };
 
+const findByIDStatic = async (req) => {
+    let responseMessage;
+    try {
+        const collection_name = await importedModal(req.dbName);
+        const searchKey = req.id;
+        const responseData = await collection_name.findById(searchKey).exec();
+        return { status: 200, value: responseData };
+        ;
+    } catch (error) {
+        responseMessage = responseStructure.errorResponse("Error in static find by id");
+        res.send(responseMessage);
+    }
+}
 
 
 module.exports = {
@@ -308,4 +327,5 @@ module.exports = {
     readWithPagination,
     readWithSearch,
     staticArrayPush,
+    findByIDStatic
 };

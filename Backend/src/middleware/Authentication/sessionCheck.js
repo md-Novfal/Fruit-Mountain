@@ -5,7 +5,7 @@ const responseStructure = require('../../staticService/responseResponse');
 const tokenCheck = async (req, res, next) => {
     try {
         const decodeuse = jwt.verify(req.headers["token"], appConfiguration.jwt.secretKey);
-        req.extractValue = decodeuse.value[0];
+        req.extractValue = decodeuse.value;
         next();
     } catch (error) {
         const responseMessage = responseStructure.sessionResponse("token not verified!")
@@ -39,7 +39,7 @@ const adminTokenCheck = async (req, res, next) => {
     let responseMessage;
     try {
         const decodeuse = jwt.verify(req.headers["token"], appConfiguration.jwt.secretKey);
-        (decodeuse.value[0].isAdmin == true ? async () => {
+        (decodeuse.value.isAdmin == true ? async () => {
             req.extractValue = decodeuse.value[0];
             next();
         } : async () => {

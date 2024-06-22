@@ -3,12 +3,19 @@ const router = express.Router();
 
 
 const userRoute = require('./user.router');
+const postRoute = require('./post.router');
+
 
 
 
 const defaultRoutes = [{
     path: "/user",
-    route: userRoute,
+    route: userRoute
+},
+
+{
+    path: "/post",
+    route: postRoute,
 
 }]
 

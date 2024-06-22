@@ -2,12 +2,13 @@ const Joi = require('joi');
 const responseStructure = require('../staticService/responseResponse')
 
 // Define your Joi schemas
-const { userLoginSchema, updateUser } = require('../middleware/validation/user.joi');
+const { updateUser, userLogin, userSingUpSchema } = require('../middleware/validation/user.joi');
+const { createPost, getSinglePost, updateSinglePost } = require('../middleware/validation/post.joi');
 
 // Middleware function to validate request bodies against Joi schemas
 const validateUserLogin = async (request, response, next) => {
   try {
-    await userLoginSchema.validateAsync(request.body);
+    await userLogin.validateAsync(request.body);
     next();
   } catch (err) {
     let responseMessage = await responseStructure.validationResponse(err)
@@ -25,6 +26,48 @@ const updateSingleUser = async (request, response, next) => {
   }
 }
 
+const signUpUser = async (request, response, next) => {
+  try {
+    await userSingUpSchema.validateAsync(request.body);
+    next();
+  } catch (err) {
+    let responseMessage = await responseStructure.validationResponse(err)
+    response.send(responseMessage)
+  }
+}
+
+const createNewPost = async (request, response, next) => {
+  try {
+    await createPost.validateAsync(request.body);
+    next();
+  } catch (err) {
+    let responseMessage = await responseStructure.validationResponse(err)
+    response.send(responseMessage)
+  }
+}
+
+const updateSinglePostInfo = async (request, response, next) => {
+  try {
+    await updateSinglePost.validateAsync(request.body);
+    next();
+  } catch (err) {
+    let responseMessage = await responseStructure.validationResponse(err)
+    response.send(responseMessage)
+  }
+}
+
+const SinglePostInfo = async (request, response, next) => {
+  try {
+    await getSinglePost.validateAsync(request.body);
+    next();
+  } catch (err) {
+    let responseMessage = await responseStructure.validationResponse(err)
+    response.send(responseMessage)
+  }
+}
+
+
+
 
 
 
@@ -32,5 +75,9 @@ const updateSingleUser = async (request, response, next) => {
 
 module.exports = {
   validateUserLogin,
-  updateSingleUser
+  updateSingleUser,
+  signUpUser,
+  createNewPost,
+  updateSinglePostInfo,
+  SinglePostInfo
 };
