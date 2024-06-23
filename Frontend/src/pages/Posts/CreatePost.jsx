@@ -59,15 +59,13 @@ const CreatePost = () => {
             }
         });
     };
-    const updatePost = async (data) => {
-        const base64File = await fileToBase64(data.postImage[0]);
-
+    const updatePost = (data) => {
         const reqBody = {
             id: state.row._id,
             updateObject: {
                 name: data.postName,
                 description: data.postDescription,
-                postImage: base64File
+                postImage: imagePreview
             }
         };
         updatePostReq(reqBody, {
@@ -160,10 +158,14 @@ const CreatePost = () => {
                         <input
                             type="file"
                             accept="image/*"
-                            {...register('postImage', { required: 'Post Image is required' })}
+                            {...register('postImage', {
+                                validate:
+                                    state.mode === 'create'
+                                        ? (value) => !!value[0] || 'Post Image is required'
+                                        : undefined
+                            })}
                             onChange={handleFileChange}
                             style={{ display: 'block', marginTop: '10px', marginBottom: '10px' }}
-                            readOnly={state?.mode === 'view' ? true : false}
                         />
                     )}
                     {imagePreview && <ImagePreview src={imagePreview} alt="Post Image Preview" />}

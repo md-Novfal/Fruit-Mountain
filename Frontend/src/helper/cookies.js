@@ -16,7 +16,7 @@ const getAccessTokenCookie = () => {
 
 const removeAccessTokenCookie = () => {
     Cookies.remove(VITE_COOKIE_TOKEN_KEY);
-    window.location.reload()
+    // window.location.reload()
 };
 
 const setAccessTokenCookie = (token,) => {

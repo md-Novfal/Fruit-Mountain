@@ -16,7 +16,8 @@ import {
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { removeAccessTokenCookie, getAdminValueCookies } from '../helper/cookies';
+import { getAdminValueCookies } from '../helper/cookies';
+import { onLogout } from '../Authentication/auth';
 const drawerWidth = 240;
 
 const Layout = ({ children }) => {
@@ -80,7 +81,7 @@ const Layout = ({ children }) => {
                         to="/logout"
                         startIcon={<LogoutIcon />}
                         onClick={() => {
-                            removeAccessTokenCookie();
+                            onLogout();
                         }}
                     >
                         Logout
