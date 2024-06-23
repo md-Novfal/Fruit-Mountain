@@ -2,12 +2,15 @@ const { isEmpty } = require('lodash');
 const addAdmin = require('./src/models/user.model');
 const log = require('./src/staticService/logger').LOG;
 var adminData = require('./src/config/admin.json').Admin;
+const bcrypt = require('bcryptjs');
+
 
 async function adminDetails() {
     try {
         for (let i = 0; i < adminData.length; i++) {
             const addTeams = await addAdmin.find({ "email": adminData[i].email, isActive: true });
             (isEmpty(addTeams) ? async () => {
+                adminData[i].password = await bcrypt.hash(adminData[i].password, 8);
                 addAdmin.create(adminData[i]).
                     then((data) => {
                         log.info("Admin Added Successfully");
