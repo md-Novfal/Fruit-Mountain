@@ -1,10 +1,6 @@
 const crudService = require('../service/crud.controller');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const responseStructure = require('../staticService/responseResponse');
-const { isEmpty } = require('lodash');
-const appConfiguration = require('../config/config');
-
+const mongoose = require('mongoose')
 const createPost = async (req, res) => {
     try {
         var tokenValue = req.extractValue;
@@ -14,7 +10,7 @@ const createPost = async (req, res) => {
                 {
                     name: req.body.name,
                     description: req.body.description,
-                    postImage: req.files.postImage.data,
+                    postImage: req.body.postImage,
                     createdBy: tokenValue._id,
                     updatedBy: tokenValue._id,
                     isActive: true,
@@ -77,7 +73,7 @@ const getAllpost = async (req, res) => {
         requestQuery.limit = pgSize;
         requestQuery.offset = pgSize * (pgNumber - 1);
         const sortObject = req.body.sortObject;
-        const getAllUser = await crudService.readWithPagination({ dbName: 'post', requestQuery, sortQuery: sortObject, searchData: { createdBy: tokenValue._id } });
+        const getAllUser = await crudService.readWithPagination({ dbName: 'post', requestQuery, sortQuery: sortObject, searchData: { createdBy: new mongoose.Types.ObjectId(tokenValue._id) } });
         (pgNumber <= 0 && pgSize === 0
             ? () => {
                 responseMessage = responseStructure.errorResponse('invalid page number. It should start only with 1');

@@ -13,7 +13,7 @@ router.post('/register', userValidation.signUpUser, userController.RegisterNewUs
 
 router.get('/profile/read', tokenMiddleware.tokenCheck, userController.profileRead);
 
-router.post('/get/all', userValidation.updateSingleUser, tokenMiddleware.adminTokenCheck, userController.getAllUserbyPagination);
+router.post('/get/all', tokenMiddleware.adminTokenCheck, userController.getAllUserbyPagination);
 
 
 

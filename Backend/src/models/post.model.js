@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema(
             required: true,
         },
         postImage: {
-            type: Buffer,
+            type: String,
             required: true,
         },
         createdBy: {

@@ -39,7 +39,7 @@ const createRequests = async (req) => {
     } catch (error) {
         errorInitiateToken = {
             status: 400,
-            value: `${error.errorResponse.message}`,
+            value: `Error please try again`,
         };
         log.error(errorInitiateToken);
         return errorInitiateToken;
@@ -221,11 +221,9 @@ const readWithPagination = async (req) => {
         const options = req.requestQuery;
         const sortQuery = req.sortQuery;
         const query = req.searchData;
-        options.select = ['mobileNumber', 'email', 'name', 'isAdmin', 'isActive'];
         options.sort = sortQuery;
-        if (query) {
-            query.mobileNumber = { $regex: new RegExp(query.mobileNumber), $options: 'i' };
-        }
+
+
         const getPaginate = collection_name.paginate(query, options).then((result, error) => {
             if (error) {
                 responseMessage = responseStructure.errorResponse('Error in read with pagination');

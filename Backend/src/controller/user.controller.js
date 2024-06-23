@@ -39,13 +39,9 @@ const userLogin = async (req, res) => {
                 res.send(responseMessage);
             })();
     } catch (error) {
-        if (error.responseObj === undefined) {
-            responseMessage = responseStructure.errorResponse('Error in signin. Please try again');
-            res.send(responseMessage);
-        } else {
-            responseMessage = responseStructure.warningResponse(error.responseObj.responseDataParams.data);
-            res.send(responseMessage);
-        }
+        responseMessage = responseStructure.errorResponse('Error in signin. Please try again');
+        res.send(responseMessage);
+
     }
 };
 
@@ -76,16 +72,18 @@ const RegisterNewUser = async (req, res) => {
                 responseMessage = responseStructure.successResponse({
                     message: 'User created successfully ',
                     token: authToken,
-                    value: createUserInfo.value
+                    value: createUserInfo.value[0],
+                    isAdmin: createUserInfo.value[0].isAdmin,
+
                 });
                 res.send(responseMessage);
             }
             : async () => {
-                responseMessage = responseStructure.warningResponse("Email already exisit");
+                responseMessage = responseStructure.warningResponse({ message: "Email already exisit" });
                 res.send(responseMessage);
             })();
     } catch (error) {
-        responseMessage = responseStructure.errorResponse('Error in signin. Please try again');
+        responseMessage = responseStructure.errorResponse('Error in sign up. Please try again');
         res.send(responseMessage);
 
     }

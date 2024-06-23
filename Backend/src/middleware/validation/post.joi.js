@@ -3,7 +3,7 @@ const Joi = require('joi');
 const createPost = Joi.object({
     name: Joi.string().required(),
     description: Joi.string().required(),
-    postImage: Joi.string(),
+    postImage: Joi.string().required(),
 });
 
 const getSinglePost = Joi.object({
