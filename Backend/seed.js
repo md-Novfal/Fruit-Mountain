@@ -6,16 +6,22 @@ var adminData = require('./src/config/admin.json').Admin;
 async function adminDetails() {
     try {
         for (let i = 0; i < adminData.length; i++) {
-            addAdmin.create(adminData[i]).then((data) => {
-                log.info("admin Added Successfully");
-            }).
-                catch((err) => {
-                    throw err;
-                });
+            const addTeams = await addAdmin.find({ "email": adminData[i].email, isActive: true });
+            (isEmpty(addTeams) ? async () => {
+                addAdmin.create(adminData[i]).
+                    then((data) => {
+                        log.info("Admin Added Successfully");
+                    }).
+                    catch((err) => {
+                        throw err;
+                    });
 
+            } : () => {
+                return log.info('Admin::Admin  details  Already Exist');
+            })()
         }
     } catch (error) {
-        return log.info('admin Data::Unable to check the seed::admin data');
+        return log.info('Admin::Unable to check the seed');
 
     }
 }
