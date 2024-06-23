@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const appConfiguration = require('./src/config/config')
 const fileupload = require("express-fileupload");
+const seed = require('./seed');
 
 
 // Initialize Express app
@@ -39,6 +40,7 @@ app.use(function (err, req, res, next) {
 mongoose
     .connect(appConfiguration.mongoDB.url, appConfiguration.mongoDB.options)
     .then(async () => {
+        seed.adminDetails();
         log.info('Successfully connected to MongoDB.');
     })
     .catch((err) => {

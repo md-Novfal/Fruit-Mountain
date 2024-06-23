@@ -1,0 +1,13 @@
+{
+  "Admin": [
+    {
+      "email": "admin@gmail.com",
+      "user": { "first": "admin", "last": "admin" },
+      "mobileNumber": "9876543210",
+      "password": "Admin123@",
+      "createdBy": "system",
+      "isActive": true,
+      "isAdmin": true
+    }
+  ]
+}
