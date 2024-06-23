@@ -18,7 +18,7 @@ const UserList = () => {
     const columns = [
         {
             field: 'name',
-            headerName: 'Post Name',
+            headerName: 'Name',
             flex: 1,
             renderCell: (cellvalues) => {
                 return (
